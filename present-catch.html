@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Present Catch - Untitled Christmas Website</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(180deg, #1a4d7a 0%, #2d1b4e 100%);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .title {
+            font-size: 2em;
+            color: #ffeb3b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 15px;
+            font-size: 1.3em;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+
+        .game-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .basket {
+            position: absolute;
+            bottom: 20px;
+            font-size: 3em;
+            transition: left 0.1s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .present {
+            position: absolute;
+            font-size: 2.5em;
+            animation: fall linear;
+            cursor: default;
+        }
+
+        @keyframes fall {
+            to {
+                top: 100%;
+            }
+        }
+
+        .game-over-screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .game-over-screen.active {
+            display: block;
+        }
+
+        .game-over-title {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+        }
+
+        .final-score {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #ffeb3b;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            transition: transform 0.2s;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        .instructions {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #b3e5fc;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 1em;
+            transition: background 0.3s;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.history.back()">← Back to Hub</button>
+
+    <div class="header">
+        <h1 class="title">🎁 Present Catch 🎁</h1>
+        <div class="stats">
+            <div class="stat">Score: <span id="score">0</span></div>
+            <div class="stat">Caught: <span id="caught">0</span></div>
+            <div class="stat">Missed: <span id="missed">0</span></div>
+        </div>
+        <div class="instructions">Use ← → Arrow Keys or Move Your Mouse!</div>
+    </div>
+
+    <div class="game-container" id="gameContainer">
+        <div class="basket" id="basket">🧺</div>
+    </div>
+
+    <div class="game-over-screen" id="gameOverScreen">
+        <div class="game-over-title">Time's Up! 🎄</div>
+        <div class="final-score">Final Score: <span id="finalScore">0</span></div>
+        <div style="font-size: 1.2em; margin-bottom: 20px;">
+            Caught: <span id="finalCaught">0</span> | Missed: <span id="finalMissed">0</span>
+        </div>
+        <button class="btn" onclick="startGame()">Play Again</button>
+        <button class="btn" onclick="window.history.back()">Back to Hub</button>
+    </div>
+
+    <script>
+        const basket = document.getElementById('basket');
+        const gameContainer = document.getElementById('gameContainer');
+        const scoreEl = document.getElementById('score');
+        const caughtEl = document.getElementById('caught');
+        const missedEl = document.getElementById('missed');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+
+        let score = 0;
+        let caught = 0;
+        let missed = 0;
+        let basketX = window.innerWidth / 2 - 30;
+        let gameActive = false;
+        let presents = [];
+        let spawnInterval;
+        let gameTimer;
+
+        const presentEmojis = ['🎁', '🎁', '🎁', '🎁'];
+
+        function updateBasketPosition(x) {
+            const containerWidth = gameContainer.offsetWidth;
+            const basketWidth = 60;
+            basketX = Math.max(0, Math.min(x - basketWidth / 2, containerWidth - basketWidth));
+            basket.style.left = basketX + 'px';
+        }
+
+        // Mouse control - follow cursor smoothly
+        let targetX = basketX;
+        
+        gameContainer.addEventListener('mousemove', (e) => {
+            if (gameActive) {
+                targetX = e.clientX;
+            }
+        });
+
+        function smoothBasketMovement() {
+            if (gameActive) {
+                const containerWidth = gameContainer.offsetWidth;
+                const basketWidth = 60;
+                const smoothedX = basketX + (targetX - basketX - basketWidth / 2) * 0.2;
+                basketX = Math.max(0, Math.min(smoothedX, containerWidth - basketWidth));
+                basket.style.left = basketX + 'px';
+                requestAnimationFrame(smoothBasketMovement);
+            }
+        }
+
+        // Keyboard control
+        document.addEventListener('keydown', (e) => {
+            if (!gameActive) return;
+            if (e.key === 'ArrowLeft') {
+                updateBasketPosition(basketX - 30);
+            } else if (e.key === 'ArrowRight') {
+                updateBasketPosition(basketX + 90);
+            }
+        });
+
+        function spawnPresent() {
+            if (!gameActive) return;
+
+            const present = document.createElement('div');
+            present.classList.add('present');
+            present.textContent = presentEmojis[Math.floor(Math.random() * presentEmojis.length)];
+            present.style.left = Math.random() * (gameContainer.offsetWidth - 60) + 'px';
+            present.style.top = '-60px';
+            
+            const fallDuration = Math.random() * 2 + 3;
+            present.style.animationDuration = fallDuration + 's';
+            
+            gameContainer.appendChild(present);
+            
+            const presentObj = {
+                element: present,
+                x: parseFloat(present.style.left),
+                caught: false
+            };
+            presents.push(presentObj);
+
+            setTimeout(() => {
+                if (!presentObj.caught && gameActive) {
+                    missed++;
+                    missedEl.textContent = missed;
+                }
+                present.remove();
+                presents = presents.filter(p => p !== presentObj);
+            }, fallDuration * 1000);
+        }
+
+        function checkCollisions() {
+            if (!gameActive) return;
+
+            const basketRect = basket.getBoundingClientRect();
+            
+            presents.forEach(presentObj => {
+                if (presentObj.caught) return;
+                
+                const presentRect = presentObj.element.getBoundingClientRect();
+                
+                if (
+                    presentRect.bottom >= basketRect.top &&
+                    presentRect.top <= basketRect.bottom &&
+                    presentRect.right >= basketRect.left &&
+                    presentRect.left <= basketRect.right
+                ) {
+                    presentObj.caught = true;
+                    caught++;
+                    score += 10;
+                    caughtEl.textContent = caught;
+                    scoreEl.textContent = score;
+                    
+                    presentObj.element.style.animation = 'none';
+                    presentObj.element.remove();
+                }
+            });
+
+            if (gameActive) {
+                requestAnimationFrame(checkCollisions);
+            }
+        }
+
+        function startGame() {
+            score = 0;
+            caught = 0;
+            missed = 0;
+            scoreEl.textContent = score;
+            caughtEl.textContent = caught;
+            missedEl.textContent = missed;
+            gameActive = true;
+            gameOverScreen.classList.remove('active');
+            
+            presents.forEach(p => p.element.remove());
+            presents = [];
+
+            updateBasketPosition(window.innerWidth / 2);
+            targetX = window.innerWidth / 2;
+
+            smoothBasketMovement();
+            spawnInterval = setInterval(spawnPresent, 1000);
+            checkCollisions();
+
+            gameTimer = setTimeout(() => {
+                endGame();
+            }, 60000); // 60 seconds
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(spawnInterval);
+            clearTimeout(gameTimer);
+            
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('finalCaught').textContent = caught;
+            document.getElementById('finalMissed').textContent = missed;
+            gameOverScreen.classList.add('active');
+        }
+
+        // Start game on load
+        startGame();
+    </script>
+</body>
+</html>
