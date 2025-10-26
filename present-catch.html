@@ -147,6 +147,28 @@
         .back-btn:hover {
             background: rgba(255, 255, 255, 0.3);
         }
+
+        .countdown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10em;
+            color: #ffeb3b;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            animation: pulse 1s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
     </style>
 </head>
 <body>
@@ -158,8 +180,9 @@
             <div class="stat">Score: <span id="score">0</span></div>
             <div class="stat">Caught: <span id="caught">0</span></div>
             <div class="stat">Missed: <span id="missed">0</span></div>
+            <div class="stat">Time: <span id="timeLeft">60</span>s</div>
         </div>
-        <div class="instructions">Use ← → Arrow Keys or Move Your Mouse!</div>
+        <div class="instructions">Move Your Mouse to Control the Basket!</div>
     </div>
 
     <div class="game-container" id="gameContainer">
@@ -182,16 +205,19 @@
         const scoreEl = document.getElementById('score');
         const caughtEl = document.getElementById('caught');
         const missedEl = document.getElementById('missed');
+        const timeLeftEl = document.getElementById('timeLeft');
         const gameOverScreen = document.getElementById('gameOverScreen');
 
         let score = 0;
         let caught = 0;
         let missed = 0;
+        let timeLeft = 60;
         let basketX = window.innerWidth / 2 - 30;
         let gameActive = false;
         let presents = [];
         let spawnInterval;
         let gameTimer;
+        let countdownInterval;
 
         const presentEmojis = ['🎁', '🎁', '🎁', '🎁'];
 
@@ -222,15 +248,7 @@
             }
         }
 
-        // Keyboard control
-        document.addEventListener('keydown', (e) => {
-            if (!gameActive) return;
-            if (e.key === 'ArrowLeft') {
-                updateBasketPosition(basketX - 30);
-            } else if (e.key === 'ArrowRight') {
-                updateBasketPosition(basketX + 90);
-            }
-        });
+        // Keyboard control removed - mouse only
 
         function spawnPresent() {
             if (!gameActive) return;
@@ -299,10 +317,11 @@
             score = 0;
             caught = 0;
             missed = 0;
+            timeLeft = 60;
             scoreEl.textContent = score;
             caughtEl.textContent = caught;
             missedEl.textContent = missed;
-            gameActive = true;
+            timeLeftEl.textContent = timeLeft;
             gameOverScreen.classList.remove('active');
             
             presents.forEach(p => p.element.remove());
@@ -311,9 +330,46 @@
             updateBasketPosition(window.innerWidth / 2);
             targetX = window.innerWidth / 2;
 
+            // Show 3-2-1-GO countdown
+            showStartCountdown();
+        }
+
+        function showStartCountdown() {
+            const countdownDiv = document.createElement('div');
+            countdownDiv.className = 'countdown-overlay';
+            countdownDiv.textContent = '3';
+            gameContainer.appendChild(countdownDiv);
+
+            let count = 3;
+            const countInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownDiv.textContent = count;
+                } else {
+                    countdownDiv.textContent = 'GO!';
+                    setTimeout(() => {
+                        countdownDiv.remove();
+                        actuallyStartGame();
+                    }, 800);
+                    clearInterval(countInterval);
+                }
+            }, 1000);
+        }
+
+        function actuallyStartGame() {
+            gameActive = true;
             smoothBasketMovement();
             spawnInterval = setInterval(spawnPresent, 1000);
             checkCollisions();
+
+            // Update timer every second
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                timeLeftEl.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
 
             gameTimer = setTimeout(() => {
                 endGame();
@@ -323,6 +379,7 @@
         function endGame() {
             gameActive = false;
             clearInterval(spawnInterval);
+            clearInterval(countdownInterval);
             clearTimeout(gameTimer);
             
             document.getElementById('finalScore').textContent = score;
