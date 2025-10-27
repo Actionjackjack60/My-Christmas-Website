@@ -148,11 +148,11 @@
                 <span class="coming-soon" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">Play Now!</span>
             </div>
 
-            <div class="game-card" onclick="alert('Game coming soon! We will build this next!')">
+            <div class="game-card" onclick="window.location.href='memory-match.html'">
                 <div class="game-icon">🎮</div>
                 <h2 class="game-title">Memory Match</h2>
                 <p class="game-description">Find matching pairs of festive items. Test your memory skills!</p>
-                <span class="coming-soon">Coming Soon</span>
+                <span class="coming-soon" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">Play Now!</span>
             </div>
 
             <div class="game-card" onclick="alert('Game coming soon! We will build this next!')">
@@ -164,12 +164,21 @@
         </div>
 
         <div class="footer">
-            <p>Made with ❤️ for the holidays | Thank you for playing!</p>
-            <p style="margin-top: 10px; font-size: 0.9em;">More games and features coming soon!</p>
+            <p>Made with ❤️ for the holidays</p>
         </div>
     </div>
 
     <script>
+        // Background music
+        const music = new Audio('menumusic.mp3');
+        music.loop = true;
+        music.volume = 0.3;
+        
+        // Try to play music (might need user interaction first)
+        document.addEventListener('click', () => {
+            music.play().catch(e => console.log('Audio play failed:', e));
+        }, { once: true });
+
         // Create snowflakes
         function createSnowflake() {
             const snowflake = document.createElement('div');
