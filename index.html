@@ -125,9 +125,31 @@
             margin-top: 50px;
             color: #b3e5fc;
         }
+
+        .audio-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1em;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: opacity 0.5s;
+        }
+
+        .audio-message.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
+    <div class="audio-message" id="audioMessage">🎵 Click anywhere to start music</div>
+    
     <div class="container">
         <div class="header">
             <h1 class="title">🎄 Untitled Christmas Website 🎄</h1>
@@ -174,10 +196,20 @@
         music.loop = true;
         music.volume = 0.3;
         
-        // Try to play music (might need user interaction first)
-        document.addEventListener('click', () => {
-            music.play().catch(e => console.log('Audio play failed:', e));
-        }, { once: true });
+        const audioMessage = document.getElementById('audioMessage');
+        
+        // Start music on first click and hide message
+        let musicStarted = false;
+        const startMusic = () => {
+            if (!musicStarted) {
+                music.play().catch(e => console.log('Audio play failed:', e));
+                musicStarted = true;
+                audioMessage.classList.add('hidden');
+                setTimeout(() => audioMessage.remove(), 500);
+            }
+        };
+        
+        document.addEventListener('click', startMusic, { once: true });
 
         // Create snowflakes
         function createSnowflake() {
