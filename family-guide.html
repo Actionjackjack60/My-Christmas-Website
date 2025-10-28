@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Guide - Winter World</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(180deg, #1a4d7a 0%, #2d1b4e 100%);
+            color: white;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 1em;
+            transition: background 0.3s;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .title {
+            font-size: 2.5em;
+            color: #ffeb3b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #b3e5fc;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #ffeb3b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-content {
+            font-size: 1.1em;
+            color: #e0e0e0;
+        }
+
+        .game-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .game-name {
+            font-size: 1.3em;
+            color: #4ade80;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .age-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .tip-item {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #4ade80;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.history.back()">← Back to Hub</button>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">❄️ Family Guide ❄️</h1>
+            <p class="subtitle">Everything parents need to know about Winter World</p>
+        </div>
+
+        <!-- Section 1: About -->
+        <div class="section">
+            <h2 class="section-title">🎄 About Winter World</h2>
+            <div class="section-content">
+                <p>Winter World is a collection of fun, festive games designed to celebrate the holiday season! All games are free to play, require no account or login, and work directly in your web browser.</p>
+                <br>
+                <p>Our games are designed to be simple, engaging, and appropriate for all ages. Kids can play independently or with family members, making it perfect for holiday fun together!</p>
+                <br>
+                <p><strong>Key Features:</strong></p>
+                <ul>
+                    <li>No registration or personal information required</li>
+                    <li>No in-app purchases or hidden costs</li>
+                    <li>Works on computers, tablets, and phones</li>
+                    <li>Child-friendly content with festive themes</li>
+                    <li>Progress saves automatically in your browser</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 2: Game Descriptions -->
+        <div class="section">
+            <h2 class="section-title">🎮 Our Games</h2>
+            <div class="section-content">
+                <div class="game-item">
+                    <div class="game-name">🎁 Present Catch</div>
+                    <span class="age-badge">Ages 5+</span>
+                    <p><strong>How to Play:</strong> Move your mouse to control the basket and catch falling presents before they hit the ground. Each caught present earns you points!</p>
+                    <p><strong>Skills:</strong> Hand-eye coordination, reaction time, focus</p>
+                    <p><strong>Game Length:</strong> 60 seconds per round</p>
+                </div>
+
+                <div class="game-item">
+                    <div class="game-name">🎮 Memory Match</div>
+                    <span class="age-badge">Ages 6+</span>
+                    <p><strong>How to Play:</strong> Flip cards to find matching pairs of festive items. Remember where each item is located to match them all before time runs out!</p>
+                    <p><strong>Skills:</strong> Memory, concentration, pattern recognition</p>
+                    <p><strong>Game Length:</strong> 60 seconds per round</p>
+                </div>
+
+                <div class="game-item">
+                    <div class="game-name">⛄ Snowman Builder</div>
+                    <span class="age-badge">Coming Soon!</span>
+                    <p><strong>How to Play:</strong> Stack snowballs to build the tallest snowman before time runs out!</p>
+                    <p><strong>Skills:</strong> Timing, precision, quick thinking</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Age Recommendations -->
+        <div class="section">
+            <h2 class="section-title">👨‍👩‍👧‍👦 Age Recommendations</h2>
+            <div class="section-content">
+                <p><strong>Ages 5-7:</strong> Present Catch is perfect for younger children developing motor skills and hand-eye coordination. The simple controls (just move the mouse!) make it accessible and fun.</p>
+                <br>
+                <p><strong>Ages 6-10:</strong> Memory Match challenges kids to remember and think strategically. It's great for developing memory skills and concentration.</p>
+                <br>
+                <p><strong>Ages 8+:</strong> All games! Older kids can challenge themselves to beat their high scores and improve their times.</p>
+                <br>
+                <p><strong>Note:</strong> These are just suggestions! Every child develops at their own pace. Feel free to let your kids explore all the games and find what they enjoy most.</p>
+            </div>
+        </div>
+
+        <!-- Section 4: Tips for Parents -->
+        <div class="section">
+            <h2 class="section-title">💡 Tips for Parents</h2>
+            <div class="section-content">
+                <div class="tip-item">
+                    <strong>Play Together:</strong> Join your kids for a round! Take turns or compete for the highest score. It's a great way to bond during the holidays.
+                </div>
+                <div class="tip-item">
+                    <strong>Set Time Limits:</strong> Each game is short (60 seconds), making it easy to say "one more game" or "three more rounds." Use this to manage screen time effectively.
+                </div>
+                <div class="tip-item">
+                    <strong>Celebrate Improvement:</strong> Instead of focusing on winning, celebrate when kids beat their personal best scores. This encourages persistence and growth mindset.
+                </div>
+                <div class="tip-item">
+                    <strong>Make it Educational:</strong> Memory Match is great for practicing memory skills. Ask your child about their strategy for remembering card locations!
+                </div>
+                <div class="tip-item">
+                    <strong>Device Tips:</strong> The games work best with a mouse or trackpad. On tablets, make sure the screen is clean for accurate touch controls.
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Safety & Privacy -->
+        <div class="section">
+            <h2 class="section-title">🔒 Safety & Privacy</h2>
+            <div class="section-content">
+                <p>Your family's safety and privacy are our top priorities:</p>
+                <br>
+                <ul>
+                    <li><strong>No Personal Information:</strong> We don't ask for names, emails, or any personal data</li>
+                    <li><strong>No Accounts Required:</strong> Kids can play immediately without signing up</li>
+                    <li><strong>Local Storage Only:</strong> Game progress is saved in your browser, not on our servers</li>
+                    <li><strong>No Ads:</strong> We don't display any advertisements</li>
+                    <li><strong>No External Links:</strong> Kids won't accidentally leave the site</li>
+                    <li><strong>Age-Appropriate Content:</strong> All games feature festive, family-friendly themes</li>
+                    <li><strong>No Chat or Social Features:</strong> Kids can't communicate with strangers</li>
+                </ul>
+                <br>
+                <p>If you have any questions or concerns, please don't hesitate to reach out. We want Winter World to be a safe, fun place for families to enjoy together!</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 40px 20px; color: #b3e5fc;">
+            <p>Happy Holidays from Winter World! ❄️🎄</p>
+        </div>
+    </div>
+</body>
+</html>

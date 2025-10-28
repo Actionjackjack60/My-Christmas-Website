@@ -187,6 +187,11 @@
 
         <div class="footer">
             <p>Made with ❤️ for the holidays</p>
+            <p style="margin-top: 15px;">
+                <a href="family-guide.html" style="color: #4ade80; text-decoration: none; font-size: 1.1em; padding: 10px 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; display: inline-block; transition: background 0.3s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'">
+                    👨‍👩‍👧‍👦 Family Guide
+                </a>
+            </p>
         </div>
     </div>
 
@@ -198,18 +203,30 @@
         
         const audioMessage = document.getElementById('audioMessage');
         
+        // Check if music was playing before (page refresh/navigation)
+        const wasMusicPlaying = sessionStorage.getItem('musicPlaying') === 'true';
+        
+        if (wasMusicPlaying) {
+            // Auto-resume music
+            music.play().catch(e => console.log('Audio play failed:', e));
+            audioMessage.style.display = 'none';
+        }
+        
         // Start music on first click and hide message
-        let musicStarted = false;
+        let musicStarted = wasMusicPlaying;
         const startMusic = () => {
             if (!musicStarted) {
                 music.play().catch(e => console.log('Audio play failed:', e));
                 musicStarted = true;
+                sessionStorage.setItem('musicPlaying', 'true');
                 audioMessage.classList.add('hidden');
                 setTimeout(() => audioMessage.remove(), 500);
             }
         };
         
-        document.addEventListener('click', startMusic, { once: true });
+        if (!wasMusicPlaying) {
+            document.addEventListener('click', startMusic, { once: true });
+        }
 
         // Create snowflakes
         function createSnowflake() {
