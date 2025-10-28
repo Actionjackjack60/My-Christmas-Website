@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Present Catch - Winter World</title>
+    <title>Winter World</title>
     <style>
         * {
             margin: 0;
@@ -15,385 +15,275 @@
             font-family: 'Comic Sans MS', cursive, sans-serif;
             background: linear-gradient(180deg, #1a4d7a 0%, #2d1b4e 100%);
             color: white;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .header {
-            padding: 20px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            position: relative;
-            z-index: 300;
-        }
-
-        .title {
-            font-size: 2em;
-            color: #ffeb3b;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 15px;
-            font-size: 1.3em;
-        }
-
-        .stat {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 10px 20px;
-            border-radius: 10px;
-        }
-
-        .game-container {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .basket {
-            position: absolute;
-            bottom: 20px;
-            font-size: 3em;
-            transition: left 0.1s;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .present {
-            position: absolute;
-            font-size: 2.5em;
-            animation: fall linear;
-            cursor: default;
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            color: white;
+            font-size: 1.5em;
+            opacity: 0.8;
+            animation: fall linear infinite;
+            z-index: 1;
         }
 
         @keyframes fall {
             to {
-                top: 100%;
+                transform: translateY(100vh) rotate(360deg);
             }
         }
 
-        .game-over-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
         }
 
-        .game-over-screen.active {
-            display: flex;
-        }
-
-        .game-over-content {
+        .header {
             text-align: center;
-        }
-
-        .game-over-title {
-            font-size: 3em;
-            margin-bottom: 20px;
-            color: #ff6b6b;
-        }
-
-        .final-score {
-            font-size: 2em;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
             margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .title {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
             color: #ffeb3b;
         }
 
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2em;
-            border-radius: 10px;
-            cursor: pointer;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            transition: transform 0.2s;
-            margin: 10px;
+        .countdown {
+            font-size: 2.5em;
+            margin: 20px 0;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .btn:hover {
-            transform: scale(1.1);
-        }
-
-        .instructions {
-            margin-top: 20px;
-            font-size: 0.9em;
+        .countdown-label {
+            font-size: 0.5em;
             color: #b3e5fc;
         }
 
-        .back-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
+        .games-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .game-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
             cursor: pointer;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .game-title {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .game-description {
             font-size: 1em;
-            transition: background 0.3s;
-            z-index: 400;
+            color: #e0e0e0;
+            line-height: 1.5;
         }
 
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .coming-soon {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
         }
 
-        .countdown-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-            animation: pulse 1s ease-in-out;
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 50px;
+            color: #b3e5fc;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+        .audio-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1em;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: opacity 0.5s;
+        }
+
+        .audio-message.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
-    <button class="back-btn" onclick="window.history.back()">← Back to Hub</button>
-
-    <div class="header">
-        <h1 class="title">🎁 Present Catch 🎁</h1>
-        <div class="stats">
-            <div class="stat">Score: <span id="score">0</span></div>
-            <div class="stat">Caught: <span id="caught">0</span></div>
-            <div class="stat">Missed: <span id="missed">0</span></div>
-            <div class="stat">Time: <span id="timeLeft">60</span>s</div>
-        </div>
-        <div class="instructions">Move Your Mouse to Control the Basket!</div>
-    </div>
-
-    <div class="game-container" id="gameContainer">
-        <div class="basket" id="basket">🧺</div>
-        <div class="game-over-screen" id="gameOverScreen">
-            <div class="game-over-content">
-                <div class="game-over-title">Time's Up! 🎄</div>
-                <div class="final-score">Final Score: <span id="finalScore">0</span></div>
-                <div style="font-size: 1.2em; margin-bottom: 20px;">
-                    Caught: <span id="finalCaught">0</span> | Missed: <span id="finalMissed">0</span>
-                </div>
-                <button class="btn" onclick="startGame()">Play Again</button>
-                <button class="btn" onclick="window.history.back()">Back to Hub</button>
+    <div class="audio-message" id="audioMessage">🎵 Click anywhere to start music</div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">❄️ Winter World ❄️</h1>
+            <div class="countdown">
+                <span id="days">0</span><span class="countdown-label"> days</span>
+                <span id="hours">0</span><span class="countdown-label">h</span>
+                <span id="minutes">0</span><span class="countdown-label">m</span>
+                <span id="seconds">0</span><span class="countdown-label">s</span>
             </div>
+            <p style="font-size: 1.2em; margin-top: 10px;">until Christmas!</p>
+        </div>
+
+        <div class="games-section">
+            <div class="game-card" onclick="window.location.href='present-catch.html'">
+                <div class="game-icon">🎁</div>
+                <h2 class="game-title">Present Catch</h2>
+                <p class="game-description">Catch falling presents before they hit the ground! How many can you save?</p>
+                <span class="coming-soon" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">Play Now!</span>
+            </div>
+
+            <div class="game-card" onclick="window.location.href='memory-match.html'">
+                <div class="game-icon">🎮</div>
+                <h2 class="game-title">Memory Match</h2>
+                <p class="game-description">Find matching pairs of festive items. Test your memory skills!</p>
+                <span class="coming-soon" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">Play Now!</span>
+            </div>
+
+            <div class="game-card" onclick="alert('Game coming soon! We will build this next!')">
+                <div class="game-icon">⛄</div>
+                <h2 class="game-title">Snowman Builder</h2>
+                <p class="game-description">Build the tallest snowman before time runs out!</p>
+                <span class="coming-soon">Coming Soon</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Made with ❤️ for the holidays</p>
+            <p style="margin-top: 15px;">
+                <a href="family-guide.html" style="color: #4ade80; text-decoration: none; font-size: 1.1em; padding: 10px 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; display: inline-block; transition: background 0.3s;" onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'">
+                    👨‍👩‍👧‍👦 Family Guide
+                </a>
+            </p>
         </div>
     </div>
 
     <script>
-        const basket = document.getElementById('basket');
-        const gameContainer = document.getElementById('gameContainer');
-        const scoreEl = document.getElementById('score');
-        const caughtEl = document.getElementById('caught');
-        const missedEl = document.getElementById('missed');
-        const timeLeftEl = document.getElementById('timeLeft');
-        const gameOverScreen = document.getElementById('gameOverScreen');
-
-        let score = 0;
-        let caught = 0;
-        let missed = 0;
-        let timeLeft = 60;
-        let basketX = window.innerWidth / 2 - 30;
-        let gameActive = false;
-        let presents = [];
-        let spawnInterval;
-        let gameTimer;
-        let countdownInterval;
-
-        const presentEmojis = ['🎁', '🎁', '🎁', '🎁'];
-
-        function updateBasketPosition(x) {
-            const containerWidth = gameContainer.offsetWidth;
-            const basketWidth = 60;
-            basketX = Math.max(0, Math.min(x - basketWidth / 2, containerWidth - basketWidth));
-            basket.style.left = basketX + 'px';
-        }
-
-        // Mouse control - follow cursor smoothly
-        let targetX = basketX;
+        // Background music
+        const music = new Audio('menumusic.mp3');
+        music.loop = true;
+        music.volume = 0.3;
         
-        gameContainer.addEventListener('mousemove', (e) => {
-            if (gameActive) {
-                targetX = e.clientX;
+        const audioMessage = document.getElementById('audioMessage');
+        
+        // Check if music was playing before (use localStorage to persist through refreshes)
+        let musicStarted = localStorage.getItem('musicPlaying') === 'true';
+        
+        // Function to start/resume music
+        function resumeMusic() {
+            if (musicStarted) {
+                music.play().catch(e => console.log('Audio play failed:', e));
+                if (audioMessage) {
+                    audioMessage.style.display = 'none';
+                }
+            }
+        }
+        
+        // Resume music when page becomes visible (back button)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && musicStarted) {
+                resumeMusic();
             }
         });
-
-        function smoothBasketMovement() {
-            if (gameActive) {
-                const containerWidth = gameContainer.offsetWidth;
-                const basketWidth = 60;
-                const smoothedX = basketX + (targetX - basketX - basketWidth / 2) * 0.2;
-                basketX = Math.max(0, Math.min(smoothedX, containerWidth - basketWidth));
-                basket.style.left = basketX + 'px';
-                requestAnimationFrame(smoothBasketMovement);
-            }
+        
+        // Resume music on page load if it was playing before
+        if (musicStarted) {
+            resumeMusic();
+        } else {
+            // First time - wait for click
+            const startMusic = () => {
+                music.play().catch(e => console.log('Audio play failed:', e));
+                musicStarted = true;
+                localStorage.setItem('musicPlaying', 'true');
+                audioMessage.classList.add('hidden');
+                setTimeout(() => {
+                    if (audioMessage.parentNode) {
+                        audioMessage.remove();
+                    }
+                }, 500);
+            };
+            
+            document.addEventListener('click', startMusic, { once: true });
         }
 
-        function spawnPresent() {
-            if (!gameActive) return;
-
-            const present = document.createElement('div');
-            present.classList.add('present');
-            present.textContent = presentEmojis[Math.floor(Math.random() * presentEmojis.length)];
-            present.style.left = Math.random() * (gameContainer.offsetWidth - 60) + 'px';
-            present.style.top = '-60px';
-            
-            const fallDuration = Math.random() * 2 + 3;
-            present.style.animationDuration = fallDuration + 's';
-            
-            gameContainer.appendChild(present);
-            
-            const presentObj = {
-                element: present,
-                x: parseFloat(present.style.left),
-                caught: false
-            };
-            presents.push(presentObj);
+        // Create snowflakes
+        function createSnowflake() {
+            const snowflake = document.createElement('div');
+            snowflake.classList.add('snowflake');
+            snowflake.innerHTML = '❄';
+            snowflake.style.left = Math.random() * 100 + '%';
+            snowflake.style.animationDuration = Math.random() * 3 + 5 + 's';
+            snowflake.style.opacity = Math.random() * 0.6 + 0.4;
+            snowflake.style.fontSize = Math.random() * 1 + 0.5 + 'em';
+            document.body.appendChild(snowflake);
 
             setTimeout(() => {
-                if (!presentObj.caught && gameActive) {
-                    missed++;
-                    missedEl.textContent = missed;
-                }
-                present.remove();
-                presents = presents.filter(p => p !== presentObj);
-            }, fallDuration * 1000);
+                snowflake.remove();
+            }, 8000);
         }
 
-        function checkCollisions() {
-            if (!gameActive) return;
+        setInterval(createSnowflake, 300);
 
-            const basketRect = basket.getBoundingClientRect();
-            
-            presents.forEach(presentObj => {
-                if (presentObj.caught) return;
-                
-                const presentRect = presentObj.element.getBoundingClientRect();
-                
-                if (
-                    presentRect.bottom >= basketRect.top &&
-                    presentRect.top <= basketRect.bottom &&
-                    presentRect.right >= basketRect.left &&
-                    presentRect.left <= basketRect.right
-                ) {
-                    presentObj.caught = true;
-                    caught++;
-                    score += 10;
-                    caughtEl.textContent = caught;
-                    scoreEl.textContent = score;
-                    
-                    presentObj.element.style.animation = 'none';
-                    presentObj.element.remove();
-                }
-            });
+        // Countdown timer
+        function updateCountdown() {
+            const christmas = new Date('December 25, 2025 00:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = christmas - now;
 
-            if (gameActive) {
-                requestAnimationFrame(checkCollisions);
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+
+            if (distance < 0) {
+                document.querySelector('.countdown').innerHTML = "🎅 Merry Christmas! 🎄";
             }
         }
 
-        function startGame() {
-            score = 0;
-            caught = 0;
-            missed = 0;
-            timeLeft = 60;
-            scoreEl.textContent = score;
-            caughtEl.textContent = caught;
-            missedEl.textContent = missed;
-            timeLeftEl.textContent = timeLeft;
-            gameOverScreen.classList.remove('active');
-            
-            presents.forEach(p => p.element.remove());
-            presents = [];
-
-            updateBasketPosition(window.innerWidth / 2);
-            targetX = window.innerWidth / 2;
-
-            // Show 3-2-1-GO countdown
-            showStartCountdown();
-        }
-
-        function showStartCountdown() {
-            const countdownDiv = document.createElement('div');
-            countdownDiv.className = 'countdown-overlay';
-            countdownDiv.style.fontSize = '15em';
-            countdownDiv.style.color = '#ffeb3b';
-            countdownDiv.textContent = '3';
-            gameContainer.appendChild(countdownDiv);
-
-            let count = 3;
-            const countInterval = setInterval(() => {
-                count--;
-                if (count > 0) {
-                    countdownDiv.textContent = count;
-                } else {
-                    countdownDiv.textContent = 'GO!';
-                    setTimeout(() => {
-                        countdownDiv.remove();
-                        actuallyStartGame();
-                    }, 800);
-                    clearInterval(countInterval);
-                }
-            }, 1000);
-        }
-
-        function actuallyStartGame() {
-            gameActive = true;
-            smoothBasketMovement();
-            spawnInterval = setInterval(spawnPresent, 1000);
-            checkCollisions();
-
-            // Update timer every second
-            countdownInterval = setInterval(() => {
-                timeLeft--;
-                timeLeftEl.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    endGame();
-                }
-            }, 1000);
-
-            gameTimer = setTimeout(() => {
-                endGame();
-            }, 60000); // 60 seconds
-        }
-
-        function endGame() {
-            gameActive = false;
-            clearInterval(spawnInterval);
-            clearInterval(countdownInterval);
-            clearTimeout(gameTimer);
-            
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('finalCaught').textContent = caught;
-            document.getElementById('finalMissed').textContent = missed;
-            gameOverScreen.classList.add('active');
-        }
-
-        // Start game on load
-        startGame();
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Present Catch - Untitled Christmas Website</title>
+    <title>Present Catch - Winter World</title>
     <style>
         * {
             margin: 0;
@@ -26,6 +26,8 @@
             text-align: center;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 300;
         }
 
         .title {
@@ -40,7 +42,6 @@
             gap: 40px;
             margin-top: 15px;
             font-size: 1.3em;
-            flex-wrap: wrap;
         }
 
         .stat {
@@ -79,18 +80,23 @@
 
         .game-over-screen {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
             display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
         }
 
         .game-over-screen.active {
-            display: block;
+            display: flex;
+        }
+
+        .game-over-content {
+            text-align: center;
         }
 
         .game-over-title {
@@ -129,7 +135,7 @@
         }
 
         .back-btn {
-            position: absolute;
+            position: fixed;
             top: 20px;
             left: 20px;
             background: rgba(255, 255, 255, 0.2);
@@ -141,7 +147,7 @@
             font-family: 'Comic Sans MS', cursive, sans-serif;
             font-size: 1em;
             transition: background 0.3s;
-            z-index: 100;
+            z-index: 400;
         }
 
         .back-btn:hover {
@@ -158,9 +164,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10em;
-            color: #ffeb3b;
-            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
             z-index: 50;
             animation: pulse 1s ease-in-out;
         }
@@ -187,16 +190,17 @@
 
     <div class="game-container" id="gameContainer">
         <div class="basket" id="basket">🧺</div>
-    </div>
-
-    <div class="game-over-screen" id="gameOverScreen">
-        <div class="game-over-title">Time's Up! 🎄</div>
-        <div class="final-score">Final Score: <span id="finalScore">0</span></div>
-        <div style="font-size: 1.2em; margin-bottom: 20px;">
-            Caught: <span id="finalCaught">0</span> | Missed: <span id="finalMissed">0</span>
+        <div class="game-over-screen" id="gameOverScreen">
+            <div class="game-over-content">
+                <div class="game-over-title">Time's Up! 🎄</div>
+                <div class="final-score">Final Score: <span id="finalScore">0</span></div>
+                <div style="font-size: 1.2em; margin-bottom: 20px;">
+                    Caught: <span id="finalCaught">0</span> | Missed: <span id="finalMissed">0</span>
+                </div>
+                <button class="btn" onclick="startGame()">Play Again</button>
+                <button class="btn" onclick="window.history.back()">Back to Hub</button>
+            </div>
         </div>
-        <button class="btn" onclick="startGame()">Play Again</button>
-        <button class="btn" onclick="window.history.back()">Back to Hub</button>
     </div>
 
     <script>
@@ -247,8 +251,6 @@
                 requestAnimationFrame(smoothBasketMovement);
             }
         }
-
-        // Keyboard control removed - mouse only
 
         function spawnPresent() {
             if (!gameActive) return;
@@ -337,6 +339,8 @@
         function showStartCountdown() {
             const countdownDiv = document.createElement('div');
             countdownDiv.className = 'countdown-overlay';
+            countdownDiv.style.fontSize = '15em';
+            countdownDiv.style.color = '#ffeb3b';
             countdownDiv.textContent = '3';
             gameContainer.appendChild(countdownDiv);
 
