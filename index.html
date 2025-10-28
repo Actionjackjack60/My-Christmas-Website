@@ -203,8 +203,8 @@
         
         const audioMessage = document.getElementById('audioMessage');
         
-        // Check if music was playing before
-        let musicStarted = sessionStorage.getItem('musicPlaying') === 'true';
+        // Check if music was playing before (use localStorage to persist through refreshes)
+        let musicStarted = localStorage.getItem('musicPlaying') === 'true';
         
         // Function to start/resume music
         function resumeMusic() {
@@ -231,7 +231,7 @@
             const startMusic = () => {
                 music.play().catch(e => console.log('Audio play failed:', e));
                 musicStarted = true;
-                sessionStorage.setItem('musicPlaying', 'true');
+                localStorage.setItem('musicPlaying', 'true');
                 audioMessage.classList.add('hidden');
                 setTimeout(() => {
                     if (audioMessage.parentNode) {
