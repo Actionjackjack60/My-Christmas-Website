@@ -203,28 +203,43 @@
         
         const audioMessage = document.getElementById('audioMessage');
         
-        // Check if music was playing before (page refresh/navigation)
-        const wasMusicPlaying = sessionStorage.getItem('musicPlaying') === 'true';
+        // Check if music was playing before
+        let musicStarted = sessionStorage.getItem('musicPlaying') === 'true';
         
-        if (wasMusicPlaying) {
-            // Auto-resume music
-            music.play().catch(e => console.log('Audio play failed:', e));
-            audioMessage.style.display = 'none';
+        // Function to start/resume music
+        function resumeMusic() {
+            if (musicStarted) {
+                music.play().catch(e => console.log('Audio play failed:', e));
+                if (audioMessage) {
+                    audioMessage.style.display = 'none';
+                }
+            }
         }
         
-        // Start music on first click and hide message
-        let musicStarted = wasMusicPlaying;
-        const startMusic = () => {
-            if (!musicStarted) {
+        // Resume music when page becomes visible (back button)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && musicStarted) {
+                resumeMusic();
+            }
+        });
+        
+        // Resume music on page load if it was playing before
+        if (musicStarted) {
+            resumeMusic();
+        } else {
+            // First time - wait for click
+            const startMusic = () => {
                 music.play().catch(e => console.log('Audio play failed:', e));
                 musicStarted = true;
                 sessionStorage.setItem('musicPlaying', 'true');
                 audioMessage.classList.add('hidden');
-                setTimeout(() => audioMessage.remove(), 500);
-            }
-        };
-        
-        if (!wasMusicPlaying) {
+                setTimeout(() => {
+                    if (audioMessage.parentNode) {
+                        audioMessage.remove();
+                    }
+                }, 500);
+            };
+            
             document.addEventListener('click', startMusic, { once: true });
         }
 
