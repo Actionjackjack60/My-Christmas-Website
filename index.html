@@ -145,14 +145,29 @@
             opacity: 0;
             pointer-events: none;
         }
+
+        .beta-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 235, 59, 0.9);
+            color: #1a4d7a;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
     <div class="audio-message" id="audioMessage">🎵 Click anywhere to start music</div>
+    <div class="beta-badge">BETA</div>
     
     <div class="container">
         <div class="header">
-            <h1 class="title">❄️ Winter World BETA ❄️</h1>
+            <h1 class="title">❄️ Winter World ❄️</h1>
             <div class="countdown">
                 <span id="days">0</span><span class="countdown-label"> days</span>
                 <span id="hours">0</span><span class="countdown-label">h</span>
@@ -177,11 +192,11 @@
                 <span class="coming-soon" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">Play Now!</span>
             </div>
 
-            <div class="game-card" onclick="alert('Game coming soon! We will build this next!')">
-                <div class="game-icon">⛄</div>
-                <h2 class="game-title">Snowman Builder</h2>
-                <p class="game-description">Build the tallest snowman before time runs out!</p>
-                <span class="coming-soon">Coming Soon</span>
+            <div class="game-card" onclick="window.location.href='festive-canvas.html'">
+                <div class="game-icon">🎨</div>
+                <h2 class="game-title">Festive Canvas</h2>
+                <p class="game-description">Draw holiday masterpieces with colors and special markers!</p>
+                <span class="coming-soon" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">Play Now!</span>
             </div>
         </div>
 
