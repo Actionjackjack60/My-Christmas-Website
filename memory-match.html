@@ -265,6 +265,16 @@
     </div>
 
     <script>
+        // Background music
+        const music = new Audio('gamemusic.mp3');
+        music.loop = true;
+        music.volume = 0.3;
+        
+        // Auto-start music if it was enabled on hub
+        if (localStorage.getItem('musicPlaying') === 'true') {
+            music.play().catch(e => console.log('Audio play failed:', e));
+        }
+
         const cardEmojis = ['🎁', '🎄', '⛄', '🎅'];
         const cardGrid = document.getElementById('cardGrid');
         const movesEl = document.getElementById('moves');
