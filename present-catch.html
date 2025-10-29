@@ -237,7 +237,7 @@
 
         function updateBasketPosition(x) {
             const containerWidth = gameContainer.offsetWidth;
-            const basketWidth = 60;
+            const basketWidth = 80;
             basketX = Math.max(0, Math.min(x - basketWidth / 2, containerWidth - basketWidth));
             basket.style.left = basketX + 'px';
         }
@@ -254,7 +254,7 @@
         function smoothBasketMovement() {
             if (gameActive) {
                 const containerWidth = gameContainer.offsetWidth;
-                const basketWidth = 60;
+                const basketWidth = 80; // Increased to account for emoji size
                 const smoothedX = basketX + (targetX - basketX - basketWidth / 2) * 0.2;
                 basketX = Math.max(0, Math.min(smoothedX, containerWidth - basketWidth));
                 basket.style.left = basketX + 'px';
